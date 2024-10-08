@@ -51,7 +51,7 @@ export const formatPrice = (price: number) => {
   const formattedPrice = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
-    maximumFractionDigits: 0, // INR is typically displayed without decimal places
+    maximumFractionDigits: 0,  
   }).format(price);
 
   return formattedPrice;
