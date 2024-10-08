@@ -9,19 +9,23 @@ import Order from '../database/models/order.model';
 import Event from '../database/models/event.model';
 import {ObjectId} from 'mongodb';
 import User from '../database/models/user.model';
+import { auth } from '@clerk/nextjs';
 
 export const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-  const price = order.isFree ? 0 : Number(order.price) * 100;
+  const {sessionClaims} = auth();
+  // const price = order.isFree ? 0 : Number(order.price) * 100;
+  // Convert USD to INR (assuming 1 USD = 75 INR)
+  const exchangeRate = 75;
+  const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * exchangeRate * 100);
 
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
-            currency: 'usd',
-            unit_amount: price,
+            currency: 'inr',
+            unit_amount: priceInINR,
             product_data: {
               name: order.eventTitle
             }
@@ -29,6 +33,7 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
           quantity: 1
         },
       ],
+      customer_email: sessionClaims?.userEmail,
       metadata: {
         eventId: order.eventId,
         buyerId: order.buyerId,
@@ -36,6 +41,10 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
       cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+      billing_address_collection: 'required',  
+      shipping_address_collection: {  
+        allowed_countries: ['IN'],
+      },
     });
 
     redirect(session.url!)

@@ -16,6 +16,7 @@ import {
   GetEventsByUserParams,
   GetRelatedEventsByCategoryParams,
 } from '@/types'
+import mongoose from 'mongoose'
 
 const getCategoryByName = async (name: string) => {
   return Category.findOne({ name: { $regex: name, $options: 'i' } })
@@ -28,18 +29,44 @@ const populateEvent = (query: any) => {
 }
 
 // CREATE
+// export async function createEvent({ userId, event, path }: CreateEventParams) {
+//   try {
+//     await connectToDatabase()
+// console.log(userId,"userId")
+//     const organizer = await User.findById(userId)
+//     if (!organizer) throw new Error('Organizer not found')
+
+//     const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
+//     revalidatePath(path)
+
+//     return JSON.parse(JSON.stringify(newEvent))
+//   } catch (error) {
+//     handleError(error)
+//   }
+// }
+// CREATE
 export async function createEvent({ userId, event, path }: CreateEventParams) {
   try {
     await connectToDatabase()
+    console.log("Attempting to create event with userId:", userId)
+
+    // Check if userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new Error(`Invalid userId: ${userId}`)
+    }
 
     const organizer = await User.findById(userId)
-    if (!organizer) throw new Error('Organizer not found')
+    if (!organizer) {
+      console.log("Organizer not found for userId:", userId)
+      throw new Error('Organizer not found')
+    }
 
     const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
     revalidatePath(path)
 
     return JSON.parse(JSON.stringify(newEvent))
   } catch (error) {
+    console.error("Error in createEvent:", error)
     handleError(error)
   }
 }
