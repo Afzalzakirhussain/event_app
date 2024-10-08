@@ -1,5 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 
 export default function Page() {
-  return <SignIn />
+  console.log("sign-in page called");
+  return <SignIn />;
 }
