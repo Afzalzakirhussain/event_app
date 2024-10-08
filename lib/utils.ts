@@ -47,23 +47,14 @@ export const formatDateTime = (dateString: Date) => {
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file)
 
-export const formatPrice = (price: string) => {
-  //   // Convert USD to INR (assuming 1 USD = 75 INR)
-  //   const exchangeRate = 75
-  //   const amountInINR = amount * exchangeRate
-  
-  // // const formattedPrice = new Intl.NumberFormat('en-US', {
-  // //   style: 'currency',
-  // //   currency: 'USD',
-  // // }).format(amount)
-
+export const formatPrice = (price: number) => {
   const formattedPrice = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0, // INR is typically displayed without decimal places
-  }).format(price)
+  }).format(price);
 
-  return formattedPrice
+  return formattedPrice;
 }
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
