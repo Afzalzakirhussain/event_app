@@ -48,21 +48,20 @@ export const formatDateTime = (dateString: Date) => {
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file)
 
 export const formatPrice = (price: string) => {
-  const amount = parseFloat(price)
-    // Convert USD to INR (assuming 1 USD = 75 INR)
-    const exchangeRate = 75
-    const amountInINR = amount * exchangeRate
+  //   // Convert USD to INR (assuming 1 USD = 75 INR)
+  //   const exchangeRate = 75
+  //   const amountInINR = amount * exchangeRate
   
-  // const formattedPrice = new Intl.NumberFormat('en-US', {
-  //   style: 'currency',
-  //   currency: 'USD',
-  // }).format(amount)
+  // // const formattedPrice = new Intl.NumberFormat('en-US', {
+  // //   style: 'currency',
+  // //   currency: 'USD',
+  // // }).format(amount)
 
   const formattedPrice = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0, // INR is typically displayed without decimal places
-  }).format(amountInINR)
+  }).format(price)
 
   return formattedPrice
 }

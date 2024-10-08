@@ -14,10 +14,11 @@ import { auth } from '@clerk/nextjs';
 export const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const {sessionClaims} = auth();
+  console.log(sessionClaims , "sessionClaims")
   // const price = order.isFree ? 0 : Number(order.price) * 100;
   // Convert USD to INR (assuming 1 USD = 75 INR)
-  const exchangeRate = 75;
-  const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * exchangeRate * 100);
+  const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * 100);
+  // const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * exchangeRate * 100);
 
   try {
     const session = await stripe.checkout.sessions.create({
