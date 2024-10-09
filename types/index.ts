@@ -29,6 +29,8 @@ export type CreateEventParams = {
     price: string
     isFree: boolean
     url: string
+    totalTickets: number
+    availableTickets: number
   }
   path: string
 }
@@ -47,6 +49,8 @@ export type UpdateEventParams = {
     price: string
     isFree: boolean
     url: string
+    totalTickets: number
+    availableTickets: number
   }
   path: string
 }

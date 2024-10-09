@@ -8,7 +8,8 @@ export const eventFormSchema = z.object({
   startDateTime: z.date(),
   endDateTime: z.date(),
   categoryId: z.string(),
-  price: z.string(),
+  price: z.string().optional(),
   isFree: z.boolean(),
-  url: z.string().url()
+  url: z.string().url(),
+  totalTickets: z.number().min(1, 'Total tickets must be at least 1'),
 })

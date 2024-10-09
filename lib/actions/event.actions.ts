@@ -47,6 +47,7 @@ const populateEvent = (query: any) => {
 // CREATE
 export async function createEvent({ userId, event, path }: CreateEventParams) {
   try {
+    console.log(event,"event")
     await connectToDatabase()
     console.log("Attempting to create event with userId:", userId)
 
@@ -61,7 +62,11 @@ export async function createEvent({ userId, event, path }: CreateEventParams) {
       throw new Error('Organizer not found')
     }
 
-    const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
+    const newEvent = await Event.create({ ...event,       category: event.categoryId,
+      organizer: userId,
+      availableTickets: event.totalTickets,  
+      totalTickets: event.totalTickets
+    })
     revalidatePath(path)
 
     return JSON.parse(JSON.stringify(newEvent))
@@ -98,7 +103,7 @@ export async function updateEvent({ userId, event, path }: UpdateEventParams) {
 
     const updatedEvent = await Event.findByIdAndUpdate(
       event._id,
-      { ...event, category: event.categoryId },
+      { ...event, category: event.categoryId, availableTickets: event.totalTickets, totalTickets: event.totalTickets },
       { new: true }
     )
     revalidatePath(path)
