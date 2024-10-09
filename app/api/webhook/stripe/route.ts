@@ -1,7 +1,7 @@
 import stripe from 'stripe'
 import { NextResponse } from 'next/server'
 import { createOrder } from '@/lib/actions/order.actions'
-console.log("webhook")
+
 export async function POST(request: Request) {
   const body = await request.text()
   console.log("webhook triggered for stripe");
@@ -26,17 +26,17 @@ export async function POST(request: Request) {
     console.log(event.data.object, "event.data.object");
     console.log(event, "event");
       // Retrieve the session with line items
-      // const session = await stripe.checkout.sessions.retrieve(id, {
-      //   expand: ['line_items'],
-      // });
-      // const quantity = session.line_items?.data[0]?.quantity || 1;
+      const session = await stripe.checkout.sessions.retrieve(id, {
+        expand: ['line_items'],
+      });
+      const quantity = session.line_items?.data[0]?.quantity || 1;
       
     const order = {
       stripeId: id,
       eventId: metadata?.eventId || '',
       buyerId: metadata?.buyerId || '',
-      // quantity: quantity,
-      totalAmount: '123456',
+      quantity: quantity,
+      totalAmount: quantity,
       // totalAmount: amount_total ? (amount_total / 100).toString() : '0',
       createdAt: new Date(),
     }
