@@ -58,3 +58,29 @@ export async function getCommentsByEventId(eventId: string) {
     handleError(error)
   }
 }
+
+ 
+export async function deleteComment(commentId: string, userId: string, path: string) {
+    try {
+      await connectToDatabase();
+  
+      const comment = await Comment.findById(commentId);
+  
+      if (!comment) {
+        throw new Error('Comment not found');
+      }
+  
+      if (comment.user.toString() !== userId) {
+        throw new Error('Unauthorized to delete this comment');
+      }
+  
+      await Comment.findByIdAndDelete(commentId);
+  
+      revalidatePath(path);
+  
+      return { success: true };
+    } catch (error) {
+      console.error("Error in deleteComment:", error);
+      handleError(error);
+    }
+  }

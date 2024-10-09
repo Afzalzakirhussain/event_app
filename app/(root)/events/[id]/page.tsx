@@ -2,6 +2,7 @@ import BackButton from "@/components/shared/BackButton";
 import CheckoutButton from "@/components/shared/CheckoutButton";
 import Collection from "@/components/shared/Collection";
 import CommentSection from "@/components/shared/CommentSection";
+import RatingSection from "@/components/shared/RatingSection";
 import {
   getEventById,
   getRelatedEventsByCategory,
@@ -119,9 +120,11 @@ const EventDetails = async ({
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col gap-2"></div>
             </div>
-
+            <RatingSection
+              eventId={id}
+              initialRating={event.averageRating || 0}
+            />
             <div className="flex flex-col gap-2">
               <p className="p-bold-20 text-grey-600">What You'll Learn:</p>
               <p className="p-medium-16 lg:p-regular-18">{event.description}</p>
