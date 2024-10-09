@@ -34,7 +34,7 @@ const Collection = ({
               // console.log(`Event ${index}:`, event);
               // console.log(event, "event123");
               return (
-                <li key={event?._id} className="flex justify-center">
+                <li key={index} className="flex justify-center">
                   <Card
                     event={event}
                     hasOrderLink={hasOrderLink}

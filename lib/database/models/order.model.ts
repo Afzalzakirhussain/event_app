@@ -13,6 +13,7 @@ export interface IOrder extends Document {
     firstName: string
     lastName: string
   }
+  quantity: number
 }
 
 export type IOrderItem = {
@@ -22,6 +23,7 @@ export type IOrderItem = {
   eventTitle: string
   eventId: string
   buyer: string
+  quantity: number
 }
 
 const OrderSchema = new Schema({
@@ -44,6 +46,9 @@ const OrderSchema = new Schema({
   buyer: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+  },
+  quantity: {
+    type: Number,
   },
 })
 

@@ -121,6 +121,7 @@ export type CreateOrderParams = {
   stripeId: string
   eventId: string
   buyerId: string
+  quantity: number
   totalAmount: string
   createdAt: Date
 }

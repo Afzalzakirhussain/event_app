@@ -1,6 +1,10 @@
-import stripe from 'stripe'
+import Stripe  from 'stripe'
 import { NextResponse } from 'next/server'
 import { createOrder } from '@/lib/actions/order.actions'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16', // Use the latest API version
+})
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -22,22 +26,23 @@ export async function POST(request: Request) {
 
   // CREATE
   if (eventType === 'checkout.session.completed') {
-    const { id, amount_total, metadata } = event.data.object
+    // const { id, amount_total, metadata } = event.data.object
+    const { id, amount_total, metadata } = event.data.object as Stripe.Checkout.Session
     console.log(event.data.object, "event.data.object");
     console.log(event, "event");
-      // Retrieve the session with line items
+
       const session = await stripe.checkout.sessions.retrieve(id, {
         expand: ['line_items'],
       });
       const quantity = session.line_items?.data[0]?.quantity || 1;
-      
+      console.log(session,"session")
+      console.log(quantity, "quantity")
     const order = {
       stripeId: id,
       eventId: metadata?.eventId || '',
       buyerId: metadata?.buyerId || '',
       quantity: quantity,
-      totalAmount: quantity,
-      // totalAmount: amount_total ? (amount_total / 100).toString() : '0',
+      totalAmount: amount_total ? (amount_total / 100).toString() : '0',
       createdAt: new Date(),
     }
 
