@@ -9,7 +9,7 @@ const Orders = async ({ searchParams }: SearchParamProps) => {
   const searchText = (searchParams?.query as string) || "";
 
   const orders = await getOrdersByEvent({ eventId, searchString: searchText });
-
+  console.log(orders, "orders");
   return (
     <>
       <section className=" bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
@@ -30,6 +30,7 @@ const Orders = async ({ searchParams }: SearchParamProps) => {
               </th>
               <th className="min-w-[150px] py-3 text-left">Buyer</th>
               <th className="min-w-[100px] py-3 text-left">Created</th>
+              <th className="min-w-[100px] py-3 text-left">Quantity</th>
               <th className="min-w-[100px] py-3 text-right">Amount</th>
             </tr>
           </thead>
@@ -59,6 +60,7 @@ const Orders = async ({ searchParams }: SearchParamProps) => {
                       <td className="min-w-[100px] py-4">
                         {formatDateTime(row.createdAt).dateTime}
                       </td>
+                      <td className="min-w-[100px] py-4">{row.quantity}</td>
                       <td className="min-w-[100px] py-4 text-right">
                         {formatPrice(Number(row.totalAmount))}
                       </td>

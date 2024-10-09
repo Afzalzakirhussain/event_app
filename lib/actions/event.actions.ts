@@ -114,6 +114,32 @@ export async function updateEvent({ userId, event, path }: UpdateEventParams) {
   }
 }
 
+// UPDATE EVENT TICKETS
+export async function updateEventTickets(eventId: string, ticketsBought: number) {
+  try {
+    await connectToDatabase()
+
+    const event = await Event.findById(eventId)
+    if (!event) throw new Error('Event not found')
+
+    const updatedAvailableTickets = event.availableTickets - ticketsBought
+
+    if (updatedAvailableTickets < 0) throw new Error('Not enough tickets available')
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      eventId,
+      { $inc: { availableTickets: -ticketsBought } },
+      { new: true }
+    )
+
+    revalidatePath(`/events/${eventId}`)
+
+    return JSON.parse(JSON.stringify(updatedEvent))
+  } catch (error) {
+    handleError(error)
+  }
+}
+
 // DELETE
 export async function deleteEvent({ eventId, path }: DeleteEventParams) {
   try {

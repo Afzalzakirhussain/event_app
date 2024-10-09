@@ -1,6 +1,7 @@
 import Stripe  from 'stripe'
 import { NextResponse } from 'next/server'
 import { createOrder } from '@/lib/actions/order.actions'
+import { updateEventTickets } from '@/lib/actions/event.actions'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16', // Use the latest API version
@@ -8,7 +9,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: Request) {
   const body = await request.text()
-  console.log("webhook triggered for stripe");
   const sig = request.headers.get('stripe-signature') as string
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -21,12 +21,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Webhook error', error: err })
   }
 
-  // Get the ID and type
   const eventType = event.type
 
   // CREATE
   if (eventType === 'checkout.session.completed') {
-    // const { id, amount_total, metadata } = event.data.object
     const { id, amount_total, metadata } = event.data.object as Stripe.Checkout.Session
     console.log(event.data.object, "event.data.object");
     console.log(event, "event");
@@ -35,8 +33,6 @@ export async function POST(request: Request) {
         expand: ['line_items'],
       });
       const quantity = session.line_items?.data[0]?.quantity || 1;
-      console.log(session,"session")
-      console.log(quantity, "quantity")
     const order = {
       stripeId: id,
       eventId: metadata?.eventId || '',
@@ -46,9 +42,18 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     }
 
-    const newOrder = await createOrder(order)
-    console.log(newOrder, "newOrder");
-    return NextResponse.json({ message: 'OK', order: newOrder })
+    try {
+      const newOrder = await createOrder(order)
+      if (order.eventId) {
+        await updateEventTickets(order.eventId, quantity)
+      }
+
+      return NextResponse.json({ message: 'OK', order: newOrder })
+    } catch (error) {
+      console.error('Error processing order:', error)
+      return NextResponse.json({ message: 'Error processing order', error: error }, { status: 500 })
+   
+    }
   }
 
   return new Response('', { status: 200 })

@@ -107,6 +107,7 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
         $project: {
           _id: 1,
           totalAmount: 1,
+          quantity: 1,
           createdAt: 1,
           eventTitle: '$event.title',
           eventId: '$event._id',
@@ -121,7 +122,6 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
         },
       },
     ])
-
     return JSON.parse(JSON.stringify(orders))
   } catch (error) {
     handleError(error)
