@@ -286,7 +286,7 @@ export async function rateEvent(
 
     // Find the user's existing rating, if any
     const existingRatingIndex = event.ratings.findIndex(
-      (r) => r.user === userId
+      (r: any) => r.user === userId
     );
 
     if (existingRatingIndex > -1) {
@@ -298,7 +298,10 @@ export async function rateEvent(
     }
 
     // Calculate new average rating
-    const totalRating = event.ratings.reduce((sum, r) => sum + r.value, 0);
+    const totalRating = event.ratings.reduce(
+      (sum: any, r: any) => sum + r.value,
+      0
+    );
     event.averageRating =
       event.ratings.length > 0 ? totalRating / event.ratings.length : 0;
 
