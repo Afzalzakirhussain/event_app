@@ -15,8 +15,6 @@ type CardProps = {
 const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
-  console.log(userId, "IDDDDD");
-  console.log(event?.organizer?._id, "event.organizer._id");
   const isEventCreator = userId === event?.organizer?._id.toString();
 
   return (

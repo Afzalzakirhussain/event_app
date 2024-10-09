@@ -15,7 +15,7 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const { sessionClaims } = auth();
   const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * 100);
-  console.log(order, "order")
+   
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -58,7 +58,7 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
 export const createOrder = async (order: CreateOrderParams) => {
   try {
     await connectToDatabase();
-    
+    console.log(order, "order123");
     const newOrder = await Order.create({
       ...order,
       event: order.eventId,
