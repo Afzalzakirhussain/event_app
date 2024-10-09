@@ -15,19 +15,24 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const { sessionClaims } = auth();
   const priceInINR = order.isFree ? 0 : Math.round(Number(order.price) * 100);
-
+  console.log(order, "order")
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
             currency: 'inr',
-            unit_amount: priceInINR,
             product_data: {
               name: order.eventTitle
-            }
+            },
+            unit_amount: priceInINR,
           },
-          quantity: 1
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+            maximum: order.availableTickets,
+          },
+          quantity: 1,
         },
       ],
       customer_email: sessionClaims?.userEmail as string,

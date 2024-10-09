@@ -113,6 +113,7 @@ export type CheckoutOrderParams = {
   eventId: string
   price: string
   isFree: boolean
+  availableTickets: number
   buyerId: string
 }
 

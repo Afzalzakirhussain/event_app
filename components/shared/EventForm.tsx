@@ -77,6 +77,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             ...values,
             imageUrl: uploadedImageUrl,
             price: values.price || "0",
+            availableTickets: values.totalTickets,
           },
           userId,
           path: "/profile",
@@ -105,6 +106,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             imageUrl: uploadedImageUrl,
             _id: eventId,
             price: values.price || "0",
+            availableTickets: values.totalTickets,
           },
           path: `/events/${eventId}`,
         });
