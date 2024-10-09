@@ -12,11 +12,16 @@ type CardProps = {
   hidePrice?: boolean;
 };
 
+type ExtendedEvent = IEvent & {
+  quantity?: number;
+  availableTickets?: number;
+};
+
 const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
   const isEventCreator = userId === event?.organizer?._id.toString();
-
+  const extendedEvent = event as ExtendedEvent;
   return (
     <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
       <Link
@@ -55,9 +60,13 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
         <p className="p-medium-16 p-medium-18 text-grey-500">
           {formatDateTime(event?.startDateTime).dateTime}
         </p>
-        {!hidePrice && (
+        {!hidePrice ? (
           <p className="p-medium-16 p-medium-18 text-grey-500">
             Available Tickets: {event?.availableTickets}
+          </p>
+        ) : (
+          <p className="p-medium-16 p-medium-18 text-grey-500">
+            Tickets Booked: {extendedEvent?.quantity ?? "N/A"}
           </p>
         )}
         <Link href={`/events/${event?._id}`}>

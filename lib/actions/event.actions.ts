@@ -55,7 +55,7 @@ export async function createEvent({ userId, event, path }: CreateEventParams) {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error(`Invalid userId: ${userId}`)
     }
-
+console.log(userId,"userId123")
     const organizer = await User.findById(userId)
     if (!organizer) {
       console.log("Organizer not found for userId:", userId)

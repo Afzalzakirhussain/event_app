@@ -33,6 +33,7 @@ const EventSchema = new Schema({
   organizer: { type: Schema.Types.ObjectId, ref: 'User' },
   availableTickets: { type: Number, required: true },
   totalTickets: { type: Number, required: true },
+  quantity: { type: Number},
 })
 
 const Event = models.Event || model('Event', EventSchema);
