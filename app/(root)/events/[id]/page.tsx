@@ -1,18 +1,23 @@
 import BackButton from "@/components/shared/BackButton";
 import CheckoutButton from "@/components/shared/CheckoutButton";
 import Collection from "@/components/shared/Collection";
+import CommentSection from "@/components/shared/CommentSection";
 import {
   getEventById,
   getRelatedEventsByCategory,
 } from "@/lib/actions/event.actions";
 import { formatDateTime } from "@/lib/utils";
 import { SearchParamProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 
 const EventDetails = async ({
   params: { id },
   searchParams,
 }: SearchParamProps) => {
+  const { sessionClaims } = auth();
+  const userId = sessionClaims?.userId as string;
+
   const event = await getEventById(id);
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
@@ -141,6 +146,11 @@ const EventDetails = async ({
           page={searchParams.page as string}
           totalPages={relatedEvents?.totalPages}
         />
+      </section>
+      {/* COMMENTS SECTION */}
+      <section className="wrapper my-8">
+        <h2 className="h2-bold mb-6">Comments</h2>
+        <CommentSection eventId={id} userId={userId} />
       </section>
     </>
   );

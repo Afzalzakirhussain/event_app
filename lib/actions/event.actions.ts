@@ -28,22 +28,7 @@ const populateEvent = (query: any) => {
     .populate({ path: 'category', model: Category, select: '_id name' })
 }
 
-// CREATE
-// export async function createEvent({ userId, event, path }: CreateEventParams) {
-//   try {
-//     await connectToDatabase()
-// console.log(userId,"userId")
-//     const organizer = await User.findById(userId)
-//     if (!organizer) throw new Error('Organizer not found')
-
-//     const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
-//     revalidatePath(path)
-
-//     return JSON.parse(JSON.stringify(newEvent))
-//   } catch (error) {
-//     handleError(error)
-//   }
-// }
+ 
 // CREATE
 export async function createEvent({ userId, event, path }: CreateEventParams) {
   try {
@@ -55,7 +40,6 @@ export async function createEvent({ userId, event, path }: CreateEventParams) {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error(`Invalid userId: ${userId}`)
     }
-console.log(userId,"userId123")
     const organizer = await User.findById(userId)
     if (!organizer) {
       console.log("Organizer not found for userId:", userId)

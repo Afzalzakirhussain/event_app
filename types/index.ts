@@ -153,3 +153,14 @@ export type SearchParamProps = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
+
+
+// ====== COMMENT PARAMS
+export type CreateCommentParams = {
+  userId: string
+  eventId: string
+  comment: {
+    content: string
+  }
+  path: string
+}
