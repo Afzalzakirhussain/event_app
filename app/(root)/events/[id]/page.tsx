@@ -1,3 +1,4 @@
+import BackButton from "@/components/shared/BackButton";
 import CheckoutButton from "@/components/shared/CheckoutButton";
 import Collection from "@/components/shared/Collection";
 import {
@@ -13,7 +14,6 @@ const EventDetails = async ({
   searchParams,
 }: SearchParamProps) => {
   const event = await getEventById(id);
-
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
     eventId: event._id,
@@ -22,6 +22,9 @@ const EventDetails = async ({
 
   return (
     <>
+      <div className=" flex justify-start relative ">
+        <BackButton />
+      </div>
       <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain">
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:max-w-7xl">
           <Image
